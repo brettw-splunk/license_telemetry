@@ -11,4 +11,5 @@ App is comprised only of a single dashboard.  No support is needed or available,
 
 ## Layout
 [/dist](/dist): Releases ready for installation in Splunk Enterprise (tarballs).
+
 [/src](/src): The app itself.
