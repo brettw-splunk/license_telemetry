@@ -1,0 +1,10 @@
+# Splunk License Telemetry
+
+## Description
+Created for a Splunk customer which is prohibited from sending telemetry data directly to Splunk, this app leverages data stored in the _telemetry index for license auditing purposes.  Read more about what data Splunk collects [here](https://docs.splunk.com/Documentation/Splunk/latest/Admin/Shareperformancedata).
+
+Author: Brett Williams
+Version	1.0.0
+
+## Support
+App is comprised only of a single dashboard.  No support is needed or available, except for contacting the developer directly.

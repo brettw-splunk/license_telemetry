@@ -1,0 +1,95 @@
+<form version="1.1">
+  <label>Splunk License Telemetry</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="timetime" searchWhenChanged="true">
+      <label>Time Range</label>
+      <default>
+        <earliest>-365d@d</earliest>
+        <latest>-0d@d</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="units" searchWhenChanged="true">
+      <label>Units</label>
+      <choice value="b">Bytes</choice>
+      <choice value="kb">Kilobytes</choice>
+      <choice value="mb">Megabytes</choice>
+      <choice value="gb">Gigabytes</choice>
+      <choice value="tb">Terabytes</choice>
+      <choice value="pb">Petabytes</choice>
+      <default>gb</default>
+      <initialValue>gb</initialValue>
+    </input>
+    <input type="dropdown" token="exclude" searchWhenChanged="true">
+      <label>Exclude</label>
+      <choice value="| head 1">None</choice>
+      <choice value="| head 16">Top 15 Days</choice>
+      <choice value="| head 31">Top 30 Days</choice>
+      <choice value="| head 61">Top 60 Days</choice>
+      <default>| head 1</default>
+      <initialValue>| head 1</initialValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>True-up Value</title>
+        <search>
+          <query>index=_telemetry type=RolloverSummary
+| eval kb=b/1024
+| eval mb=b/1024/1024
+| eval gb=b/1024/1024/1024
+| eval tb=b/1024/1024/1024/1024
+| eval pb=b/1024/1024/1034/1024/1024
+| timechart span=1d sum($units$) AS $units$
+| eval $units$ = round($units$,3)
+| top showperc=false showcount=false $units$ by _time
+| sort -$units$
+$exclude$
+| tail 1</query>
+          <earliest>$timetime.earliest$</earliest>
+          <latest>$timetime.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0.000</option>
+        <option name="rangeColors">["0x53a051","0x53a051"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Proof Of Concept</title>
+      <table>
+        <search>
+          <query>index=_telemetry type=RolloverSummary
+| eval kb=b/1024
+| eval mb=b/1024/1024
+| eval gb=b/1024/1024/1024
+| eval tb=b/1024/1024/1024/1024
+| eval pb=b/1024/1024/1034/1024/1024
+| timechart span=1d sum($units$) AS $units$
+| eval $units$ = round($units$,3)
+| sort -$units$</query>
+          <earliest>$timetime.earliest$</earliest>
+          <latest>$timetime.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">70</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">true</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</form>
